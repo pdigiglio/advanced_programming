@@ -19,6 +19,8 @@
 #include <iostream>
 #include <cmath>
 
+#include "colors.h"
+
 /*
  * ==================================================================
  *        Class: SimpleCalculator
@@ -49,7 +51,9 @@ class SimpleCalculator {
 		// return division between numbers
 		double divide ( const double &a, const double &b ) {
 			if ( !b ) { /* if b == 0 */
-				std::cerr << "Cannot divide by zero!!" << std::endl;
+				std::cerr << ANSI_RED << 
+					"Cannot divide by zero!!" 
+					<< ANSI_RESET << std::endl;
 				return NAN;
 			}
 			return a / b;
