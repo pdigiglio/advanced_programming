@@ -25,11 +25,23 @@ class Person {
 		Person() {
 			// prompt for first name and set member variable
 			std::cout << "Please insert your first name: ";
-			std::cin >> firstName;
+
+			// If you use std::cin you cannot insert multiple-words names
+			// Moreover, if I don't use getline, the next instruction will take
+			// the return '\n' as input
+
+//			std::cin >> firstName;
+			std::getline( std::cin, firstName );
 
 			// prompt for last name and set member variable
 			std::cout << "Please insert your last name: ";
-			std::cin >> lastName;
+
+			// If you use std::cin you cannot insert multiple-words names
+
+//			std::cin >> lastName;
+			std::getline( std::cin, lastName );
+
+			// TODO suppress ' ', '\t', '\n' characters @ the end of strings
 		}
 
 		virtual ~Person() {}
