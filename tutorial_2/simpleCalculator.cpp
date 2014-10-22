@@ -20,18 +20,9 @@
 #include <cmath>
 
 #include "./simpleCalculator.h"
+#include "./output_print.h"
 
-/* 
- * ===  FUNCTION  ======================================================================
- *         Name:  output_print
- *  Description:  
- * =====================================================================================
- */
-void
-output_print ( double a, double b, char o, double result ) {
-	std::cout << a << " " << o << " " << b <<
-		" = " << result << std::endl;
-}		/* -----  end of function output_print  ----- */
+
 
 /* 
  * ===  FUNCTION  ======================================================================
@@ -73,6 +64,10 @@ main ( int argc, char *argv[] ) {
 	else if ( operation == 'm' )
 		std::cout << "mean( " << a << ", " << b <<
 			" ) = " << instance.mean( a, b ) << std::endl;
+	else
+		std::cerr << ANSI_RED <<
+			"Operation not defined!"
+			<< ANSI_RESET << std::endl;
 
 	return 0;
 }				/* ----------  end of function main  ---------- */
