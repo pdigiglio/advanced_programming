@@ -17,7 +17,9 @@
  */
 
 #include <iostream>
-#include <cmath>
+
+#include <math.h>
+#include <stdio.h>
 
 #include "./simpleCalculator.h"
 #include "./output_print.h"
@@ -64,10 +66,10 @@ main ( int argc, char *argv[] ) {
 	else if ( operation == 'm' )
 		std::cout << "mean( " << a << ", " << b <<
 			" ) = " << instance.mean( a, b ) << std::endl;
-	else
-		std::cerr << ANSI_RED <<
-			"Operation not defined!"
-			<< ANSI_RESET << std::endl;
+	else {
+		std::cerr << ANSI_RED << "Operation not defined!" << ANSI_RESET << std::endl;
+		return 1;
+	}
 
 	return 0;
 }				/* ----------  end of function main  ---------- */
