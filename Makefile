@@ -75,7 +75,7 @@ STD		= gnu++11
 
 # Opzioni
 CXXFLAGS = -W -Wall -Wextra -Wunreachable-code -Wunused -Wformat-security -Wmissing-noreturn \
-		   -Ofast -pedantic -std=$(STD) -masm=$(MASM) -march=$(MARCH) -mtune=$(MARCH) #-fopenmp -time
+		   -O2 -pedantic -std=$(STD) -masm=$(MASM) -march=$(MARCH) -mtune=$(MARCH) #-fopenmp -time
 
 # Add includes
 CXXFLAGS += $(INCPATH)
