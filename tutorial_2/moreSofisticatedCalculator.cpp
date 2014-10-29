@@ -45,7 +45,7 @@ main ( int argc, char *argv[] ) {
 	conv['c'] = "cos";
 	conv['t'] = "tan";
 
-	char bin_op[] = {'+', '-', '*', '/', 'm'};
+	char bin_op[] = {'+', '-', '*', '/', 'm', 'b'};
 	char un_op[] = {'t', 'c', 's'};
 
 	double a, b;
@@ -58,6 +58,7 @@ main ( int argc, char *argv[] ) {
 	std::cout << " > Multiplication ( insert * )" << std::endl;
 	std::cout << " > Division ( insert / )" << std::endl;
 	std::cout << " > Mean ( insert m )" << std::endl;
+	std::cout << " > Convert to base ( insert b )" << std::endl;
 	std::cout << " > Sine ( insert s )" << std::endl;
 	std::cout << " > Cosine ( insert c )" << std::endl;
 	std::cout << " > Tangent ( insert t )" << std::endl << std::endl;
@@ -79,7 +80,7 @@ main ( int argc, char *argv[] ) {
 
 	// decides if operation is unary or binary
 	bool unary = true;
-	for ( unsigned short int i = 0; i < 5 ; ++ i )
+	for ( unsigned short int i = 0; i < sizeof( bin_op ) / sizeof( char ) ; ++ i )
 		if( operation == *( bin_op + i ) ) {
 			unary = !unary;
 			break;
@@ -89,12 +90,11 @@ main ( int argc, char *argv[] ) {
 	if ( unary ) {
 		bool valid = false;
 
-		for ( unsigned short int i = 0; i < 3 ; ++ i ) {
+		for ( unsigned short int i = 0; i < sizeof( un_op ) / sizeof( char ) ; ++ i )
 			if( operation == *( un_op + i ) ) {
 				valid = true;
 				break;
 			}
-		}
 			
 		if( !( valid ) ) {
 			std::cerr << ANSI_RED << "[" << NEXISTS <<
@@ -137,6 +137,10 @@ main ( int argc, char *argv[] ) {
 		case 'm':	
 			std::cout << "mean( " << a << ", " << b <<
 				" ) = " << instance.mean( a, b ) << std::endl;
+			break;
+
+		case 'b':	
+			instance.base( a, b );
 			break;
 
 		case 'c':
