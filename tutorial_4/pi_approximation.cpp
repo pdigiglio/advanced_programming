@@ -17,6 +17,7 @@
  */
 
 #include <iostream>
+#include <iomanip>
 
 #include <cmath>
 #include <ctime>
@@ -49,8 +50,11 @@ main ( int argc, char *argv[] ) {
 
 	// I take 0,1 as random variable so that <x^2> = <x>
 	double piFour = ( (double) inside / throws ); 
+	double err = sqrt( piFour * ( 1 - piFour ) / ( throws - 1 ) );
 	std::cout << piFour * 4 << " +/- " << 
-		4 * sqrt( piFour * ( 1 - piFour ) / ( throws - 1 ) )  << std::endl;
+		4 * err;
+	std::cout << std::setprecision(2);
+	std::cout << " (" << 100 * err / piFour << "%)"  << std::endl;
 
 	// to see the difference in time with optimization options
 	std::cout << "Time: " << (double) ( clock() - start ) / CLOCKS_PER_SEC << std::endl;
