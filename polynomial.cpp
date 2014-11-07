@@ -40,7 +40,14 @@ normalPol ( double x, const double *a, unsigned int l = 1 ) {
 
 // evaluate polynomial with the Horner's factorization (faster, more accurate)
 	float
-hornerPol ( double x, const double *a, unsigned int l = 1 ) {
+hornerPol ( double x, const double *a, unsigned int l = 2 ) {
+//	// if l <= 1, the following operations are not allowed
+//	if ( l < 2 )
+//		return *a;
+//	// XXX this choiche becomes expensive if one wants to plot a polynomial
+//	// on several values of x. If so, just move this test in the main function
+//	// to check it once and for all before evaluating the polynomial value
+
 	// assign last operation
 	// the first --l is because index are from 0 to l - 1
 	// the second is to decrement the index
@@ -67,8 +74,8 @@ main ( int argc, char *argv[] ) {
 	for ( unsigned short int i = 0; i < N; ++ i ) {
 		// 1 / ( 1 + i )
 		*( a + i ) = (double) 1 / ( 1 + i );
-		// i / ( 1 + i )
-		*( b + i ) = (double) i / ( N + 1 ) ;
+		// i / ( N )
+		*( b + i ) = (double) i / ( N ) ;
 	}
 
 	double x = 2.5;
