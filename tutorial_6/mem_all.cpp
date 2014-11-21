@@ -2,6 +2,16 @@
  *
  *
  *           @name  mem_all.cpp
+ *          @brief  Out-of-bonds effects on arrays.
+ *
+ *          I will allocate four different arrays of length `N` (specified with a `#define`
+ *          directive). Then I will read and write from them and see what happens when I am
+ *          out of the bonds of allocated memory.
+ *
+ *          Example usage:
+ *          @code
+ *          $ ./mem_all
+ *          @endcode
  *
  *        @version  1.0
  *           @date  11/20/2014 (09:02:55 PM)
@@ -11,16 +21,6 @@
  *
  *         @author  P. Di Giglio (github.com/pdigiglio), <p.digiglio91@gmail.com>
  *        @company  
- *          @brief  Out-of-bonds effects on arrays.
- *
- *          I will allocate four different arrays of length `N` (specified with a `#define`
- *          directive). Then I will read and write from them and see what happens when I am
- *          out of the bonds of allocated memory.
- *
- *          Example usage:
- *          @code
- *          @endcode
- *
  *
  */
 
@@ -76,18 +76,18 @@ main ( int argc, char *argv[] ) {
 
 	// stack (normal) allocation
 	int stackArray[N];
+	// Heap allocation
+	int *heapArray = new int[N];
+	std::cout << "ADDR(first): " << reinterpret_cast<void*>(heapArray) << std::endl;
 	
 	/**
 	 * The _heap_ memory complains when I am out of bounds.
 	 * There is no problem for reading but I have troubles when I want to write on it.
 	 */ 
 
-	// Heap allocation
-	int *heapArray = new int[N];
-	delete [] heapArray;
 
 	int start = 0;
-	int stop = 100;
+	int stop = 110;
 
 	std::cout << " >> Global memory << " << std::endl;
 	memory_access( globalArray, start, stop );
@@ -95,11 +95,16 @@ main ( int argc, char *argv[] ) {
 	std::cout << " >> Stack memory << " << std::endl;
 	memory_access( stackArray, start, stop );
 
-	std::cout << " >> Static memory << " << std::endl;
-	memory_access( staticArray, start, stop );
+	delete [] heapArray;
+	std::cout << "ADDR(after): " << reinterpret_cast<void*>(heapArray) << std::endl;
 
 	std::cout << " >> Heap memory << " << std::endl;
 	memory_access( heapArray, start, stop );
+
+	std::cout << " >> Static memory << " << std::endl;
+	memory_access( staticArray, start, stop );
+
+//	delete [] heapArray;
 
 	return 0;
 }				/* ----------  end of function main  ---------- */
