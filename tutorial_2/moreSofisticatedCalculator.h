@@ -2,11 +2,12 @@
 
 #include <cmath>
 
-/*
- * ============================================================================
- *        Class: MoreSofisticatedCalculator
- *  Description: Based on Simplecalculator, extend metods with cos, sin, tg
- * ============================================================================
+/**
+ *
+ *        @class MoreSofisticatedCalculator
+ *
+ *        @brief Based on Simplecalculator, extend metods with cos, sin, tg
+ *
  */
 class MoreSofisticatedCalculator: public SimpleCalculator {
 	public:	
