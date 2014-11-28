@@ -28,5 +28,6 @@
 *.app
 
 # doxygen output files
-*/latex
-*/html
+latex/
+*/latex/
+*/html/
