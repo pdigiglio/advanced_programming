@@ -2,11 +2,11 @@
  *
  *
  *           @name  inheritance.cpp
- *          @brief  
  *
- *          Example usage:
- *          @code
- *          @endcode
+ *          @brief  Exercise with `virtual` methods.
+ *
+ *          In this program I am ment to deal with `virtual` stuff and figure
+ *          out how to make things work properly.
  *
  *        @version  1.0
  *           @date  11/29/2014 (12:58:47 PM)
