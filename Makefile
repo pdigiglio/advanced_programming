@@ -42,7 +42,11 @@ endif
 # Creo l'opzione da passare al compilatore per le librerie: aggiungo
 # il prefisso '-l' a tutte le librerie specificate in $(LBS) e il pre-
 # fisso '-L' alle directory dove si trovano le librerie
-LDFLAGS	= $(addprefix -l,$(LBS))
+LDFLAGS =
+ifneq($(LBS),)
+	LDFLAGS	+= $(addprefix -l,$(LBS))
+	$(info Adding $(LBS) to LDFLAGS)
+endif
 ifneq ($(LBSPATH),)
 	LDFLAGS += $(addprefix -L,$(LBSPATH))
 endif
