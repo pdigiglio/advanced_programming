@@ -119,11 +119,6 @@ $(MAIN): %: $(OBJS) Makefile
 		"$(CXX) -o `tput bold`$@`tput sgr0` `tput setaf 2`$(OBJS)`tput sgr0` $(CXXFLAGS)\n"
 	@$(CXX) $(OBJS) -o $@ $(CXXFLAGS)
 
-$(ANALISI): %: %.o round.o
-	@echo -e "[`tput bold``tput bold``tput setaf 6`$@`tput sgr0`] $(CXX) -o `tput bold`$@`tput sgr0`" \
-		" -c `tput setaf 2`$^`tput sgr0` $(INCPATH)" # $(CXXFLAGS)"
-	@$(CXX) $^ -o $@ $(CXXFLAGS)
-
 # Miscellanea
 $(MISC): %: %.o
 	@echo -e "[`tput bold``tput setaf 6`$@`tput sgr0`] $(CXX) -c `tput setaf 2`$^`tput sgr0` -o `tput bold`$@`tput sgr0` $(CXXFLAGS)"
