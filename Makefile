@@ -130,11 +130,6 @@ $(FIT).o: $(FIT).cpp
 		"-c `tput setaf 2`$<`tput sgr0` $(INCPATH) $(ROOT)" # $(CXXFLAGS)"
 	@$(CXX) -c $< -o $@ $(CXXFLAGS) $(ROOT)
 
-# ROOT analysis routine
-$(FIT): %: %.o round.o
-	@echo -e "[`tput bold``tput setaf 6`$@`tput sgr0`] $(CXX) -c `tput setaf 2`$^`tput sgr0` -o `tput bold`$@`tput sgr0` $(ROOT) $(CXXFLAGS)"
-	@$(CXX) $^ -o $@ $(CXXFLAGS) $(ROOT)
-
 # Miscellanea
 $(MISC): %: %.o
 	@echo -e "[`tput bold``tput setaf 6`$@`tput sgr0`] $(CXX) -c `tput setaf 2`$^`tput sgr0` -o `tput bold`$@`tput sgr0` $(CXXFLAGS)"
