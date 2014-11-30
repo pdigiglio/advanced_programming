@@ -28,8 +28,15 @@
 // ----------------------------------------------- //
 // non virtual classes
 // ----------------------------------------------- //
+
+/// @brief Empty class
 class EmptyClass {};
 
+/// @brief A Simple class with two implemented methods and no data members.
+///
+/// Since C++ automatically implements a default constructor, default
+/// destructor, copy constructor and assignment operator, this class should have
+/// the same size as EmptyClass.
 class SimpleClass {
 	public:
 		SimpleClass() { }
@@ -39,6 +46,12 @@ class SimpleClass {
 // ----------------------------------------------- //
 // virtual classes
 // ----------------------------------------------- //
+
+/// @brief Class with two implemented methods and no data members.
+///
+/// Since one method is virtual, a `vtable` is "appended" with the class. Thus, although
+/// DummyClass has the same number of methods as SimpleClass and EmptyClass, it will need
+/// a larger memory chunk to be allocated.
 class DummyClass {
 	public:
 		DummyClass() { }
@@ -117,6 +130,14 @@ int main(int argc, char **argv) {
 	std::cout << " Analysis of strides in memory between classes of different type and size," << std::endl;
 	std::cout << " also dep. on whether they are virtual or non-virtual" << std::endl;
 	std::cout << "***************************************************************************" << std::endl;
+
+	/// Instance an object for each declared class
+	EmptyClass empty();
+	SimpleClass simple();
+	DummyClass dummy();
+	BaseClass base();
+	Subclass sub();
+	OverloadingSubclass overloadingsub();
 
 	// TODO: Print the values of the hidden members of each class type.
 	// HINT: First, use an instance of each predefined class and interpret it as simple chunk of memory.
