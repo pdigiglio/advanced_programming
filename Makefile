@@ -124,12 +124,6 @@ $(ANALISI): %: %.o round.o
 		" -c `tput setaf 2`$^`tput sgr0` $(INCPATH)" # $(CXXFLAGS)"
 	@$(CXX) $^ -o $@ $(CXXFLAGS)
 
-# Explicit rule to make ROOT analasys routine module
-$(FIT).o: $(FIT).cpp
-	@echo -e "[`tput setaf 4`module`tput sgr0`] $(CXX) -o `tput bold`$@`tput sgr0`" \
-		"-c `tput setaf 2`$<`tput sgr0` $(INCPATH) $(ROOT)" # $(CXXFLAGS)"
-	@$(CXX) -c $< -o $@ $(CXXFLAGS) $(ROOT)
-
 # Miscellanea
 $(MISC): %: %.o
 	@echo -e "[`tput bold``tput setaf 6`$@`tput sgr0`] $(CXX) -c `tput setaf 2`$^`tput sgr0` -o `tput bold`$@`tput sgr0` $(CXXFLAGS)"
