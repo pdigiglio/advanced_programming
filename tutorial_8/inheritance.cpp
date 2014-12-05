@@ -37,6 +37,9 @@ class AbstractVector {
 		///
 		/// This is declared to be `virtual` in such a way that the right destructor
 		/// is called when inherited classes are deleted with `delete`.
+		/// 
+		/// @attention Declaring this destructor to be `virtual` will force all derived
+		/// destructors to be virtual as well!
 		virtual ~AbstractVector() {
 			std::cout << ANSI_RED << "AbstractVector" << ANSI_RESET
 				<< ": destructor called" << std::endl;
@@ -129,7 +132,15 @@ class LastVector: public SequenceVector {
 	};
 };
 
-void heap_initialization() {
+/// @brief Allocate new classes on the _heap_.
+///
+/// When a class is allocated in the heap, you only know the memory address of the chunk
+/// of memory. The class will call the _exact_ methods on the stack so only the distructor
+/// of the class will be called. This will not execute higher-level classes destructor:
+/// thats why one needs a _vtable_. The _vtable_ contains the "cascade" of all destructors
+/// to call when an inherited class is destroyed.
+	void
+heap_initialization() {
 	std::cout << "heap initialization: " << std::endl;
 	std::cout << "----" << std::endl;
 	{
@@ -144,7 +155,13 @@ void heap_initialization() {
 	std::cout << "----" << std::endl;
 }
 
-void normal_initialization() {
+/// @brief Allocate new classes on the _stack_.
+///
+/// This will work properly whether the destructor is declared to be `virtual` or not.
+/// In this function, the classes are allocated on the _stack_ and the compiler will
+/// automatically associate with derived class the distructor of base classes.
+	void
+normal_initialization() {
 	std::cout << "normal initialization: " << std::endl;
 	std::cout << "----" << std::endl;
 	{
