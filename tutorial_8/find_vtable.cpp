@@ -38,6 +38,11 @@ class SimpleClass {
 	public:
 		SimpleClass() { }
 		~SimpleClass() { }
+		/// When I add some dummy methods to see what happens to the size of the class I
+		/// apparently there is no differences.
+//		double a () { return 1.; } 
+//		double b () { return 2.; }
+//		long double c () { return 3.; }
 };
 
 // ----------------------------------------------- //
@@ -58,15 +63,20 @@ class BaseClass {
 		virtual ~BaseClass() { }
 };
 
-class SubClass : public BaseClass {
+class SubClass: public BaseClass {
 	public:
 		SubClass() { }
 		virtual ~SubClass() { }
 };
 
-class OverloadingSubClass : public BaseClass {
+class OverloadingSubClass: public BaseClass {
 	public:
 		OverloadingSubClass() { }
+
+		/// @brief Call to BaseClass::challenge() from OverloadingSubClass::challenge().
+		///
+		/// I call the base methods which is overloaded and print a messagge to know where
+		/// it has ben called from.
 		virtual void challenge() {
 			cout << "overloading subclass calling back" << endl;
 			BaseClass::challenge();
@@ -77,6 +87,10 @@ class OverloadingSubClass : public BaseClass {
 /// @brief Helper function to print the contents of the
 /// hidden table (= fixed array with `size_t` blocks)
 ///
+/// Pass the function the address of a class casted into a `size_t` and the table size.
+/// The address will be casted into a `size_t*` pointer and the element of this array
+/// will be printed out.
+///
 /// @param tableaddr specifies the location of the table in memory
 /// @param tablesize specifies the size of this table in bytes
 	void
@@ -84,25 +98,32 @@ print_hidden_table( size_t tableaddr, size_t tablesize ) {
 	cout << "Table address (dec):\t" << ANSI_BLUE << tableaddr << ANSI_RESET << endl;
 	/// @attention `hex << tableaddr` and `reinterpret_cast<size_t*> ( tableaddr )`
 	/// will print out the same value (except for the `0x` address prefix)
-	cout << "Table address (hex):\t"<< ANSI_BLUE 
+	cout << "Table address (hex):\t"<< ANSI_BLUE
 		<< reinterpret_cast<size_t*>( tableaddr ) << ANSI_RESET << endl;
 	cout << "Table size:\t\t" << ANSI_BLUE << tablesize << " byte(s)" << ANSI_RESET << endl;
 
-	/// Divide `tablesize` by the size of `size_t` to?
-	tablesize /= sizeof( size_t );
+	/// Divide `tablesize` by the size of `size_t` to know how many `size_t` element the
+	/// table contains
+	tablesize /= sizeof( char );
 	cout << "Table size:\t\t" << ANSI_BLUE << tablesize << " size_t" << ANSI_RESET << endl;
 
-	cout << ANSI_GREEN << "-------- table contents --------" << ANSI_RESET << endl;
+	cout << ANSI_GREEN << "-------- table contents >> --------" << ANSI_RESET << endl;
 
-	size_t *hiddentable = reinterpret_cast<size_t*>( tableaddr );
+	char *hiddentable = reinterpret_cast<char*>( tableaddr );
 	for ( size_t element = 0; element < tablesize; ++ element ) {
-		cout << "hidden[" << dec // decimal representation
-			<< element << "] = " << hiddentable[ element ] << endl;
+		cout << "hidden[" << dec // decimal representation of element
+			<< element << "] = " << (unsigned short) hiddentable[ element ] << endl;
 	}
-
+	
+	cout << ANSI_GREEN << "~~~~~~~~ table contents << ~~~~~~~~" << ANSI_RESET << endl;
 	cout << endl;
 }
 
+
+// @brief Helper function to call a method given by the hidden table
+//
+// @param tableaddr location of the table in memory
+// @param tableentry entry in the table
 	void
 call_hidden_table_entry( size_t tableaddr, size_t tableentry ) {
 	cout << "[CALL] function from table @ " << tableaddr
@@ -149,10 +170,14 @@ int main(int argc, char **argv) {
 
 		EmptyClass empty;
 		EmptyClass emptyLast;
-		// I take something which matches with size
-		size_t EmptyAddr = reinterpret_cast<size_t> (&empty);
+		/// I can cast the class addresses into a `size_t` variable. The compiler will
+		/// not allow a conversion into an `unsigned` (even if the size are the same).
+		/// Why?
+		size_t EmptyAddr = reinterpret_cast<size_t> ( &empty );
 		size_t EmptySize = reinterpret_cast<size_t> ( &empty ) - reinterpret_cast<size_t> ( &emptyLast );
 
+		cout << "Offset: " << &empty << " - " << &emptyLast << " = "
+			<< &empty - &emptyLast << endl << endl;
 		// check if `sizeof` and difference between addresses results match
 		if ( EmptySize != sizeof( EmptyClass ) ) {
 			cerr << ANSI_RED << "Not matching! &-& = " << EmptySize
@@ -169,8 +194,13 @@ int main(int argc, char **argv) {
 		SimpleClass simple;
 		SimpleClass simpleLast;
 		// I take something which matches with size
-		size_t SimpleAddr = reinterpret_cast<size_t> (&simple);
+		size_t SimpleAddr = reinterpret_cast<size_t> ( &simple );
 		size_t SimpleSize = reinterpret_cast<size_t> ( &simple ) - reinterpret_cast<size_t> ( &simpleLast );
+
+		cout << "Offset: " << &simple << " - " << &simpleLast << " = "
+			<< &simple - &simpleLast << endl;
+		cout << "Offset: " << &simple << " - " << &simpleLast << " = "
+			<< reinterpret_cast<size_t>( &simple ) - reinterpret_cast<size_t>( &simpleLast ) << endl << endl;
 
 		// check if `sizeof` and difference between addresses results match
 		if ( SimpleSize != sizeof( SimpleClass ) ) {
@@ -188,9 +218,14 @@ int main(int argc, char **argv) {
 		DummyClass dummy;
 		DummyClass dummyLast;
 		// I take something which matches with size
-		size_t DummyAddr = reinterpret_cast<size_t> (&dummy);
+		size_t DummyAddr = reinterpret_cast<size_t> ( &dummy );
 		size_t DummySize = reinterpret_cast<size_t> ( &dummy ) - reinterpret_cast<size_t> ( &dummyLast );
 
+		cout << "Offset: " << &dummy << " - " << &dummyLast << " = "
+			<< &dummy - &dummyLast << endl;
+		cout << "Offset: " << &dummy << " - " << &dummyLast << " = "
+			<< reinterpret_cast<size_t>( &dummy ) - reinterpret_cast<size_t>( &dummyLast ) << endl << endl;
+		
 		// check if `sizeof` and difference between addresses results match
 		if ( DummySize != sizeof( DummyClass ) ) {
 			cerr << ANSI_RED << "Not matching! &-& = " << DummySize
@@ -205,7 +240,7 @@ int main(int argc, char **argv) {
 		BaseClass base;
 		BaseClass baseLast;
 		// I take something which matches with size
-		size_t BaseAddr = reinterpret_cast<size_t> (&base);
+		size_t BaseAddr = reinterpret_cast<size_t> ( &base );
 		size_t BaseSize = reinterpret_cast<size_t> ( &base ) - reinterpret_cast<size_t> ( &baseLast );
 
 		// check if `sizeof` and difference between addresses results match
@@ -224,7 +259,7 @@ int main(int argc, char **argv) {
 		SubClass sub;
 		SubClass subLast;
 		// I take something which matches with size
-		size_t SubAddr = reinterpret_cast<size_t> (&sub);
+		size_t SubAddr = reinterpret_cast<size_t> ( &sub );
 		size_t SubSize = reinterpret_cast<size_t> ( &sub ) - reinterpret_cast<size_t> ( &subLast );
 
 		// check if `sizeof` and difference between addresses results match
@@ -242,7 +277,7 @@ int main(int argc, char **argv) {
 		OverloadingSubClass overloadingSub;
 		OverloadingSubClass overloadingSubLast;
 		// I take something which matches with size
-		size_t SubAddr = reinterpret_cast<size_t> (&overloadingSub);
+		size_t SubAddr = reinterpret_cast<size_t> ( &overloadingSub );
 		size_t SubSize = reinterpret_cast<size_t> ( &overloadingSub ) - reinterpret_cast<size_t> ( &overloadingSubLast );
 
 		// check if `sizeof` and difference between addresses results match
@@ -260,9 +295,14 @@ int main(int argc, char **argv) {
 	cout << " Analysis of class contents, for both kinds of classes, virtual and non-virtual" << endl;
 	cout << "***************************************************************************" << endl;
 
-	// task 3: - what's behind the address? a function or something more complex? print the offset differences! (how does it change with the number of methods)
-	//		   - what is the purpose of this special hidden member variable, what's behind it and what does the offset difference indiciate?
-	// (also think about that these objects are created by the runtime, and the compiler still has to call the right functions)
+	// task 3:
+	//  - what's behind the address? a function or something more complex?
+	// print the offset differences! (how does it change with the number of methods)
+	//  - what is the purpose of this special hidden member variable, what's
+	//	behind it and what does the offset difference indiciate?
+	// 
+	// (also think about that these objects are created by the runtime, and the compiler
+	// still has to call the right functions)
 	// The class types are arranged like a stack in "memory"
 	{
 
