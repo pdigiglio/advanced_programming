@@ -17,11 +17,26 @@ MODULES	= $(COMMON)
 all: $(MAIN)
 
 # Clean directory from dependences, objects and executable
+found_src_cpp  = $(shell find ./* -name "*.cpp")
+found = $(found_src_cpp:.cpp=)
+
+found_src_cc = $(shell find ./* -name "*.cc")
+found += $(found_src_cc:.cc=)
+
+found_src_h = $(shell find ./* -name "*.h")
+found += $(found_src_h:.h=)
+
+found_src_c = $(shell find ./* -name "*.c")
+found += $(found_src_c:.c=)
+
+
 clean:
-	@-rm --recursive --force --verbose *.o *.d
+	@-rm --recursive --force --verbose $(addsuffix .o, $(found)) $(addsuffix .so, $(found)) $(addsuffix .d, $(found))
+
+#	@echo $(addsuffix .o, $(found)) $(addsuffix .so, $(found)) $(addsuffix .d, $(found)) $(found)
 
 distclean: clean
-	@-rm --recursive --force --verbose $(MAIN)
+	@-rm --recursive --force --verbose $(MAIN)  $(found)
 
 # Directory for modules and headers
 MDIR	= ../modules
@@ -42,14 +57,14 @@ endif
 # Creo l'opzione da passare al compilatore per le librerie: aggiungo
 # il prefisso '-l' a tutte le librerie specificate in $(LBS) e il pre-
 # fisso '-L' alle directory dove si trovano le librerie
-LDFLAGS =
-ifneq($(LBS),)
-	LDFLAGS	+= $(addprefix -l,$(LBS))
-	$(info Adding $(LBS) to LDFLAGS)
-endif
-ifneq ($(LBSPATH),)
-	LDFLAGS += $(addprefix -L,$(LBSPATH))
-endif
+LDFLAGS = $(addprefix -l,$(LBS))
+#ifneq($(LBS),)
+#	LDFLAGS	+= $(addprefix -l,$(LBS))
+#	$(info Adding $(LBS) to LDFLAGS)
+#endif
+#ifneq ($(LBSPATH),)
+#	LDFLAGS += $(addprefix -L,$(LBSPATH))
+#endif
 
 # Add ROOT libaries
 ROOT = `root-config --libs --cflags`
