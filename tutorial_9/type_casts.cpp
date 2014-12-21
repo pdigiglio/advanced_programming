@@ -41,10 +41,15 @@ main ( void ) {
 
 	Base* ptr = new Derived();
 	/// This will call Derived::echo() if Base::echo() is declared to be `virtual`.
+	///
+	/// Also, if you rename `Base::echo()` into `Base::echo2()` then this will give an
+	/// error at compile time because the compiler cannot resolve the function. It will
+	/// try to call `Base::echo()` which doesn't exist.
 	ptr->echo();
 
 	/// If you use this `stack` allocation, Derived::echo() will be called even if
 	/// the method is not virtual.
+//	Derived *derived = new Derived();
 //	Derived derived;
 //	derived.echo();
 
