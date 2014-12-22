@@ -26,17 +26,20 @@ class MoreSofisticatedCalculator: public SimpleCalculator {
 			return tan( M_PI * x );
 		}
 
-		// convert number from base 10 to base 'base'
-		// TODO From any base to any base
-		// TODO negative numbers
+		/// @brief Convert number from base 10 to base `base`.
+		/// @todo From any base to any base
+		/// @todo negative numbers
 		void base( int number, int base ) {
 
-			// check if base is positive
+			/// First check if `base` is positive: if not so, returns.
 			if( !( base > 0 ) ) {
 				std::cerr << ANSI_RED << "Negative or null base"
 					<< ANSI_RESET << std::endl;
 				return;
-			} else if ( number < 0 ) {
+			}
+			
+			/// Check if `number` is negative: if so, returns.
+			if ( number < 0 ) {
 				std::cerr << ANSI_RED << "Negative number"
 					<< ANSI_RESET << std::endl;
 				return;
@@ -44,7 +47,7 @@ class MoreSofisticatedCalculator: public SimpleCalculator {
 
 			std::cout << number << " is represented in base " << base << " by ";
 
-			// find mawimum power of base lower than number
+			/// Find the maximum power of `base` which is lower than `number`.
 			unsigned int exponent = 0;
 			int counter = 1;
 			while ( counter <= number ) {
@@ -56,7 +59,7 @@ class MoreSofisticatedCalculator: public SimpleCalculator {
 			counter /= base;
 			-- exponent;
 
-			// convert number from base 10 to base 'base'
+			/// Convert number from base 10 to base `base`.
 			do {
 				std::cout << parse( number / counter );
 				number %= counter;
@@ -66,7 +69,7 @@ class MoreSofisticatedCalculator: public SimpleCalculator {
 			std::cout << std::endl;
 		}
 
-		// converts number > 9 into A,B,... chars
+		/// @brief Converts number > 9 into A,B,\dots{} chars
 		char parse ( int number ) {
 
 			if ( number > 9 ) {
