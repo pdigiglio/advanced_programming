@@ -74,6 +74,8 @@ main ( int argc, char *argv[] ) {
 	// static allocation
 	static int staticArray[N];
 
+	/** The _stack_ memory is not inizialized: it contains random values! */
+
 	// stack (normal) allocation
 	int stackArray[N];
 	// Heap allocation
@@ -86,8 +88,13 @@ main ( int argc, char *argv[] ) {
 	 */ 
 
 
+	/**
+	 * When my `start` parameter is negative, I have no problem as far its absolute value
+	 * is small. Then the first problem is that I cannot write on the globally allocated
+	 * array.
+	 */
 	int start = 0;
-	int stop = 110;
+	int stop = 100;
 
 	std::cout << " >> Global memory << " << std::endl;
 	memory_access( globalArray, start, stop );
@@ -95,6 +102,10 @@ main ( int argc, char *argv[] ) {
 	std::cout << " >> Stack memory << " << std::endl;
 	memory_access( stackArray, start, stop );
 
+	/**
+	 * @attention The _heap_ memory will be accessible even if I 'delete []` the array
+	 * before I use it!
+	 */
 	delete [] heapArray;
 	std::cout << "ADDR(after): " << reinterpret_cast<void*>(heapArray) << std::endl;
 
