@@ -58,8 +58,25 @@ main ( int argc, char *argv[] ) {
 	// recursion depth
 	unsigned int depth = 1000;
 
-	std::cout << "Memory occupied (depth = " << depth << "): "
-		<< recursiveSumMemory( depth ) << " Byte" << std::endl;
+
+	/// I expect the memory compsumption to have a linear dependence on the `depth`
+	/// parameter, as shown in figure
+	/// @image latex mem_vs_depth.jpeg "Memory vs. Depth (`-O3` flag, `PAYLOAD_SIZE=100`)" width=10cm
+//	for ( unsigned int depth = 0; depth < 1000; ++ depth ) {
+
+	//	std::cout << "Memory occupied (depth = ";
+//		std::cout << depth;
+//		std::cout << "\t";
+	//	std::cout << "): ";
+		std::cout << recursiveSumMemory( depth );
+	//	std::cout << " Byte"
+		std::cout << std::endl;
+
+	//	}
+	
+	/// Also, the memory compsumption as a function of `PAYLOAD_SIZE` should be linear, as
+	/// shown in figure 
+	/// @image latex mem_vs_payload.jpeg "Memory vs. `PAYLOAD_SIZE` (`-O3` flag, `depth=1000`)" width=10cm
 
 	return 0;
 }				/* ----------  end of function main  ---------- */
