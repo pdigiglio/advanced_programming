@@ -151,3 +151,9 @@ mkxeq: $(MAIN)
 # make dependencies
 mkdep: $(addsuffix .d,$(MODULES) $(MAIN))
 	@echo ""
+
+documentation:
+	-mkdir latex/
+	cp tutorial_*/*.jpeg latex/
+	doxygen
+	cd latex/ && make
