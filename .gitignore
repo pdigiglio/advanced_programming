@@ -31,3 +31,12 @@
 latex/
 */latex/
 */html/
+
+# latex source code
+*.tex
+# pdf slides & documents
+*.pdf
+
+# data & log files
+*.dat
+*.log
