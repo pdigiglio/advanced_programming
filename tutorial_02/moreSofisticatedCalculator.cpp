@@ -26,14 +26,7 @@
 #include "./moreSofisticatedCalculator.h"
 #include "./output_print.h"
 
-
-/* 
- * ===  FUNCTION  ======================================================================
- *         Name:  main
- *  Description:  
- * =====================================================================================
- */
-int
+	int
 main ( int argc, char *argv[] ) {
 	// declare a new calculator
 	MoreSofisticatedCalculator instance;
@@ -116,7 +109,7 @@ main ( int argc, char *argv[] ) {
 		std::cin >> a >> b;
 	}
 
-	// output
+	/// `switch`-loop to evaluate the choiche.
 	switch ( operation ) {
 		case '+':	
 			output_print( a, b, operation, instance.sum( a, b ) );
