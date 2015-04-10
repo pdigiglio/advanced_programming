@@ -28,26 +28,39 @@ class MoreSofisticatedCalculator: public SimpleCalculator {
 
 		/// @brief Convert number from base 10 to base `base`.
 		/// @todo From any base to any base
-		/// @todo negative numbers
+		/// @todo negative numbers [DONE]
 		void base( int number, int base ) {
 
 			/// First check if `base` is positive: if not so, returns.
-			if( !( base > 0 ) ) {
-				std::cerr << ANSI_RED << "Negative or null base"
+			if( base < 0 ) {
+				std::cerr << ANSI_RED << "Negative base!"
+					<< ANSI_RESET << std::endl;
+				return;
+			} else if ( base == 0 ) {
+				std::cerr << ANSI_RED << "Null base!"
 					<< ANSI_RESET << std::endl;
 				return;
 			}
 			
+			// character for the sign of the number
+			char sign = '\0';
 			/// Check if `number` is negative: if so, returns.
 			if ( number < 0 ) {
-				std::cerr << ANSI_RED << "Negative number"
+				std::cerr << ANSI_BLUE << "Negative number"
 					<< ANSI_RESET << std::endl;
-				return;
+					
+				number *= -1;
+				sign = '-';
 			}
 
 			std::cout << number << " is represented in base " << base << " by ";
-
-			/// Find the maximum power of `base` which is lower than `number`.
+			std::cout << sign;
+			
+			/**
+			 * Find the maximum power of `base` which is lower than `number`. The
+			 * test is `<=` instead than `<` so that in case `number == 0` it works
+			 * properly.
+			 */
 			unsigned int exponent = 0;
 			int counter = 1;
 			while ( counter <= number ) {
@@ -55,7 +68,11 @@ class MoreSofisticatedCalculator: public SimpleCalculator {
 				++ exponent;
 			}
 
-			// go back of one step
+			/**
+			 * Go back of one step. In fact if, for example, `base` is 2 and `number`
+			 * is 4, at the end of the loop `counter` is 8 and `exponent` is 3. This
+			 * is because of the previous `<=` (which I need for the case `number == 0`).
+			 */
 			counter /= base;
 			-- exponent;
 
