@@ -1,3 +1,4 @@
+
 #include "./simpleCalculator.h"
 
 #include <cmath>
@@ -33,11 +34,15 @@ class MoreSofisticatedCalculator: public SimpleCalculator {
 
 			/// First check if `base` is positive: if not so, returns.
 			if( base < 0 ) {
-				std::cerr << ANSI_RED << "Negative base!"
+				std::cerr << ANSI_RED << "Negative base: doesn't make sense, you asshole!"
 					<< ANSI_RESET << std::endl;
 				return;
 			} else if ( base == 0 ) {
-				std::cerr << ANSI_RED << "Null base!"
+				std::cerr << ANSI_RED << "Null base: doesn't make sense, you asshole!"
+					<< ANSI_RESET << std::endl;
+				return;
+			} else if ( base == 1 ) {
+				std::cerr << ANSI_RED << "Cannot convert to base 1!"
 					<< ANSI_RESET << std::endl;
 				return;
 			}
@@ -53,6 +58,7 @@ class MoreSofisticatedCalculator: public SimpleCalculator {
 				sign = '-';
 			}
 
+			std::cout << sign;
 			std::cout << number << " is represented in base " << base << " by ";
 			std::cout << sign;
 			
