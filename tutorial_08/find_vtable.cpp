@@ -38,6 +38,7 @@ class SimpleClass {
 	public:
 		SimpleClass() { }
 		~SimpleClass() { }
+
 		/// When I add some dummy methods to see what happens to the size of the class I
 		/// apparently there is no differences.
 //		double a () { return 1.; } 
@@ -82,6 +83,11 @@ class OverloadingSubClass: public BaseClass {
 			BaseClass::challenge();
 		}
 		virtual ~OverloadingSubClass() { }
+
+		// add some dummy functions to enlarge (?) the vtable
+		virtual void kung () { cout << "kung" << endl; }
+		virtual void foo () { cout << "foo" << endl; }
+		virtual void bar () { cout << "bar" << endl; }
 };
 
 /// @brief Helper function to print the contents of the
@@ -95,6 +101,7 @@ class OverloadingSubClass: public BaseClass {
 /// @param tablesize specifies the size of this table in bytes
 	void
 print_hidden_table( size_t tableaddr, size_t tablesize ) {
+
 	cout << "Table address (dec):\t" << ANSI_BLUE << tableaddr << ANSI_RESET << endl;
 	/// @attention `hex << tableaddr` and `reinterpret_cast<size_t*> ( tableaddr )`
 	/// will print out the same value (except for the `0x` address prefix)
@@ -102,17 +109,26 @@ print_hidden_table( size_t tableaddr, size_t tablesize ) {
 		<< reinterpret_cast<size_t*>( tableaddr ) << ANSI_RESET << endl;
 	cout << "Table size:\t\t" << ANSI_BLUE << tablesize << " byte(s)" << ANSI_RESET << endl;
 
+
 	/// Divide `tablesize` by the size of `size_t` to know how many `size_t` element the
-	/// table contains
-	tablesize /= sizeof( char );
+	/// table contains. If you want to have a deeper insight you could use a smaller data
+	/// type such as `char` (remember to change the type of `hiddentable` accordingly).
+	tablesize /= sizeof( size_t );
 	cout << "Table size:\t\t" << ANSI_BLUE << tablesize << " size_t" << ANSI_RESET << endl;
+
 
 	cout << ANSI_GREEN << "-------- table contents >> --------" << ANSI_RESET << endl;
 
-	char *hiddentable = reinterpret_cast<char*>( tableaddr );
+
+	size_t *hiddentable = reinterpret_cast<size_t*>( tableaddr );
 	for ( size_t element = 0; element < tablesize; ++ element ) {
 		cout << "hidden[" << dec // decimal representation of element
 			<< element << "] = " << (unsigned short) hiddentable[ element ] << endl;
+
+		cout << reinterpret_cast<void*>(hiddentable[element]) << endl;
+//		void (*myFunctionPointer) (void) = reinterpret_cast<void(*)()>(hiddentable[element]);
+//
+//		(*myFunctionPointer)();
 	}
 	
 	cout << ANSI_GREEN << "~~~~~~~~ table contents << ~~~~~~~~" << ANSI_RESET << endl;
@@ -132,6 +148,11 @@ call_hidden_table_entry( size_t tableaddr, size_t tableentry ) {
 	// TODO: implement this helper function to call a method which is given by the hidden table
 	// tableaddr: specifies the location of the table in memory
 	// tableentry: specifies the entry in the 
+	
+	size_t **ptr = reinterpret_cast<size_t**>(tableaddr);
+	void (*func) (void) = reinterpret_cast<void(*)(void)>(*ptr[tableentry]);
+
+	(*func)();
 
 	cout << "[CALL DONE] function from table" << endl;
 }
@@ -186,6 +207,19 @@ int main(int argc, char **argv) {
 
 		print_hidden_table( EmptyAddr, EmptySize );
 	
+//		/**
+//		 * try to allocate `EmptyClass` instances as array so they will be assigned to 
+//		 * contiguous memory locations
+//		 */
+//		EmptyClass contig[2];
+//
+//		size_t EmptyAddrCont = reinterpret_cast<size_t> ( contig );
+//		size_t EmptySizeCont = reinterpret_cast<size_t> ( &contig[1] ) - reinterpret_cast<size_t> ( contig );
+//
+//		cout << "Offset: " << &contig << " - " << &(contig[1]) << " = "
+//			<< &contig[1] - contig[1] << endl << endl;
+//
+//		print_hidden_table( EmptyAddrCont, EmptySizeCont );
 	}
  
 	{	// TODO: show hidden member of SimpleClass
@@ -309,12 +343,40 @@ int main(int argc, char **argv) {
 		// TODO: - compute the difference of the hidden value of DummyClass and the hidden value of BaseClass.
 		//		 - implement and use the print_hidden_table function to display the hidden table
  
+		DummyClass dummy;
+		BaseClass base;
+
+		size_t dummySize = reinterpret_cast<size_t>(&dummy) - reinterpret_cast<size_t>(&base) ;
+		
+		cout << dummySize << endl;
+		print_hidden_table( reinterpret_cast<size_t>(&dummy), dummySize );
+		call_hidden_table_entry( reinterpret_cast<size_t>(&dummy), 0 );
+//		call_hidden_table_entry( reinterpret_cast<size_t>(&base), 1 );
+
 		// TODO: - compute the difference of the hidden value of SubClass and the hidden value of BaseClass
 		//		 - implement and use the print_hidden_table function to display the hidden table
+
+		SubClass sub;
  
+		size_t subSize = reinterpret_cast<size_t>(&base) - reinterpret_cast<size_t>(&sub);
+		
+
+		cout << subSize << endl;
+		print_hidden_table( reinterpret_cast<size_t>(&sub), subSize );
+
+		/**
+		 * XXX this will call "BaseClass::challenge()"
+		 */
+		call_hidden_table_entry( reinterpret_cast<size_t>(&sub), 0 );
 		// TODO: - compute the difference of the hidden value of OverloadingSubClass and the hidden value of SubClass
 		//		 - implement and use the print_hidden_table function to display the hidden table
 	
+		OverloadingSubClass olclass;
+		size_t ovSize = reinterpret_cast<size_t>(&sub) - reinterpret_cast<size_t>(&olclass);
+		
+		cout << ovSize << endl;
+		print_hidden_table( reinterpret_cast<size_t>(&olclass), ovSize );
+		
 	}
 
 	cout << "***************************************************************************" << endl;
